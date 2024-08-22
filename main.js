@@ -1,6 +1,6 @@
-let url = 'https://api-colombia.com'
+export let url = 'https://api-colombia.com'
 let descripcionGeneral = url + '/api/v1/Country/Colombia'
-let departamentos = url + '/api/v1/Department'
+export let departamentos = url + '/api/v1/Department'
 
 fetch(descripcionGeneral)
 .then(response => response.json())
@@ -16,17 +16,21 @@ fetch(descripcionGeneral)
     `
     container.appendChild(description)
 })
-
+  
 
 fetch(departamentos)
 .then(response => response.json())
 .then(cards => {
     for (let i = 0; i < cards.length; i++) {
+
         let container = document.getElementById("container")
+
+        let imagenes = `./img/${cards[i].name}.jpg`
+
         let card = document.createElement("div")
         card.className = "card col-10 col-md-5 col-lg-3 col-xl-2"
         card.innerHTML = `
-        <img src="" class="card-img-top" >
+        <img src="${imagenes}" class="card-img-top h-50" >
         <div class="card-body text-center">
             <h5 class="card-title">${cards[i].name}</h5>
             <p class="card-text"># de Municipios: ${cards[i].municipalities}</p>
@@ -40,3 +44,9 @@ fetch(departamentos)
         container.appendChild(card)
     }
   })
+
+export function redirigirADetalles(departmentId) {
+    window.location.href = `./pages/detalles.html?id=${departmentId}`;
+}
+
+window.redirigirADetalles = redirigirADetalles;
