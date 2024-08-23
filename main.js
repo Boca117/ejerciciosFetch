@@ -30,12 +30,12 @@ fetch(departamentos)
         let card = document.createElement("div")
         card.className = "card col-10 col-md-5 col-lg-3 col-xl-2"
         card.innerHTML = `
-        <img src="${imagenes}" class="card-img-top h-50" >
+        <img src="${imagenes}" class="image justify-content-between" >
         <div class="card-body text-center">
             <h5 class="card-title">${cards[i].name}</h5>
-            <p class="card-text"># de Municipios: ${cards[i].municipalities}</p>
-            <p class="card-text"># de Habitantes: ${cards[i].population}</p> 
-            <p class="card-text">Superficie: ${cards[i].surface}</p>
+            <p class="card-text"># de Municipios:  ${cards[i].municipalities}</p>
+            <p class="card-text"># de Habitantes:  ${cards[i].population}</p> 
+            <p class="card-text">Superficie:  ${cards[i].surface}</p>
         <div class="text-center">
         <button class="btn btn-primary" onclick="redirigirADetalles('${cards[i].id}')">Detalles</button>
         </div>

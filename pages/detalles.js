@@ -12,17 +12,19 @@ function detalles(departmentId) {
             let detalles = document.getElementById("detalles");
             detalles.innerHTML = '';
             
+            let imagenes = `../img/${departamento.name}.jpg`;
+
             let card = document.createElement("div");
             card.className = "bg-dark rounded d-flex flex-wrap justify-content-center align-self-center gap-3 p-3";
             card.innerHTML = `
-            <img class="object-fit-cover rounded border border-light float-start col-10 col-md-7 col-lg-5 img-fluid" src="" alt="">
+            <img class="object-fit-cover rounded border border-light float-start col-10 col-md-7 col-lg-5 img-fluid" src="${imagenes}" alt="">
             <div class="border border-light rounded d-flex flex-column gap-2 p-2 col-10 col-md-7 col-lg-5">
-            <h3 class="align-self-center text-center text-light">${departamento.name}</h3>
-            <ul class="text-start text-light w-100">
-            <li>${departamento.description}</li>
-            <li>Tiene ${departamento.municipalities} municipios</li>
-            <li>Su población es de ${departamento.population} habitantes</li>
-            </ul>
+                <h3 class="align-self-center text-center text-light">${departamento.name}</h3>
+                <ul class="text-start text-light w-100">
+                <li>${departamento.description}</li>
+                <li>Tiene ${departamento.municipalities} municipios</li>
+                <li>Su población es de ${departamento.population} habitantes</li>
+                </ul>
             </div>`;
             
             detalles.appendChild(card);
