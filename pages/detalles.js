@@ -40,29 +40,113 @@ function detalles(departmentId) {
 }
 
 let ciudadesURL = colombia.url + '/api/v1/City'
+let ciudadesxDepartamento = [];
+function mostrarCiudades(ciudades) {
+    let ciudadesLista = document.getElementById("ciudades");
+    if (ciudadesLista) {  
+        ciudadesLista.innerHTML = '';  
+        ciudades.forEach(ciudad => {
+            let card = document.createElement("div");
+            card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap";
+            card.innerHTML = `
+            <div class="card-body text-center">
+                <h5 class="card-title">${ciudad.name}</h5>
+            </div>`;
+            
+            ciudadesLista.appendChild(card);
+        });
+    }
+}
+
 function ciudad(departmentId) {
     fetch(ciudadesURL)
     .then(response => response.json())
     .then(ciudades => {
-        const ciudadesxDepartamento = ciudades.filter((c) => c.departmentId == departmentId)
-        ciudadesxDepartamento.forEach(ciudad => {
-            let ciudadesLista = document.getElementById("ciudades")
-            
-            let card = document.createElement("div")
-            card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap"
+        ciudadesxDepartamento = ciudades.filter(c => c.departmentId == departmentId);
+        mostrarCiudades(ciudadesxDepartamento); 
+    })
+    .catch(error => {
+        console.error("Error fetching cities:", error);
+        let ciudadesLista = document.getElementById("ciudades");
+        if (ciudadesLista) {
+            ciudadesLista.innerHTML = "<p>Error cargando los datos de las ciudades.</p>";
+        }
+    });
+}
+
+
+let areasURL = colombia.url + '/api/v1/NaturalArea'
+let areasxDepartamento = [];
+
+function mostrarAreas(areas) {
+    let areasLista = document.getElementById("areas");
+    if (areasLista) {  
+        areasLista.innerHTML = '';  
+        areas.forEach(area => {
+            let card = document.createElement("div");
+            card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap";
             card.innerHTML = `
             <div class="card-body text-center">
-                <h5 class="card-title">${ciudad.name}</h5>
-            </div>`
+                <h5 class="card-title">${area.name}</h5>
+            </div>`;
             
-            ciudadesLista.appendChild(card)
-        })
-        .catch(error => {
-        console.error("Error fetching cities:", error);
-        document.getElementById("ciudades").innerHTML = "<p>Error cargando los datos de las ciudades.</p>";
+            areasLista.appendChild(card);
         });
-    })   
+    }
 }
+function areasNaturales(departmentId) {
+    fetch(areasURL)
+    .then(response => response.json())
+    .then(areas => {
+        let nombresAreas = new Set();
+
+         areasxDepartamento = areas.filter(a => {
+            if (a.departmentId == departmentId && !nombresAreas.has(a.name)) {
+                nombresAreas.add(a.name);  
+                return true;  
+            }
+            return false;  
+        });
+        mostrarAreas(areasxDepartamento);
+    })
+    .catch(error => {
+        console.error("Error fetching areas:", error);
+        let areasLista = document.getElementById("areas");
+        if (areasLista) {
+            areasLista.innerHTML = "<p>Error cargando los datos de las áreas naturales.</p>";
+        }
+    });
+}
+
+
+
+function buscarCiudad() {
+    let busquedaCiudad = document.getElementById("buscadorCiudad").value.toLowerCase();
+    
+    if (busquedaCiudad) {
+        let filtradasCiudad = ciudadesxDepartamento.filter(ciudad => ciudad.name.toLowerCase().includes(busquedaCiudad));
+        mostrarCiudades(filtradasCiudad);  
+    } else {
+        mostrarCiudades(ciudadesxDepartamento);
+    }
+}
+
+
+document.getElementById("buttonCiudad").addEventListener("click", buscarCiudad);
+
+function buscarArea() {
+    let busquedaArea = document.getElementById("buscadorAreas").value.toLowerCase();
+    
+    if (busquedaArea) {
+        let filtradasArea = areasxDepartamento.filter(area => area.name.toLowerCase().includes(busquedaArea));
+        mostrarAreas(filtradasArea);  
+    } else {
+        mostrarAreas(areasxDepartamento);
+    }
+}
+
+document.getElementById("buttonAreas").addEventListener("click", buscarArea);
+
 
 window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -71,6 +155,7 @@ window.onload = function() {
     if (departmentId) {
         detalles(departmentId);
         ciudad(departmentId);
+        areasNaturales(departmentId);
     } else {
         document.getElementById("detalles").innerHTML = `
         <div class='m-5 p-5 text-center bg-dark text-light rounded fw-bold d-flex flex-column justify-content-center align-items-center'>

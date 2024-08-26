@@ -8,41 +8,49 @@ fetch(descripcionGeneral)
 .then(response => response.json())
 .then(data => {
     let contenedor = document.getElementById("description")
-    let description = document.createElement("div")
-    contenedor.innerHTML = ""
-    description.innerHTML = `
-    <div class="p-3 gap-2 d-flex flex-column align-items-center">
+    if (contenedor) {
+
+        let description = document.createElement("div")
+        contenedor.innerHTML = "";
+        description.innerHTML = `
+        <div class="p-3 gap-2 d-flex flex-column align-items-center">
         <h5>${data.description}</h5>
-    </div>
-    `
-    contenedor.appendChild(description)
+        </div>
+        `
+        contenedor.appendChild(description)
+    }
+    
 })
-  
+.catch(error => console.error('Error fetching description:', error));  
 
 function mostrarDepartamentos(deptos) {
+
     let container = document.getElementById("container")
-    container.innerHTML = "";   
-    
-    deptos.forEach(c => {
+    if (container) {
         
-        let imagenes = `./img/${c.name}.jpg`
+        container.innerHTML = "";   
         
-        let card = document.createElement("div")
-        card.className = "card col-10 col-md-5 col-lg-3 col-xl-2"
-        card.innerHTML = `
-        <img src="${imagenes}" class="image justify-content-between" >
-        <div class="card-body text-center">
+        deptos.forEach(c => {
+            
+            let imagenes = `./img/${c.name}.jpg`
+            
+            let card = document.createElement("div")
+            card.className = "card col-10 col-md-5 col-lg-3 col-xl-2"
+            card.innerHTML = `
+            <img src="${imagenes}" class="image justify-content-between" >
+            <div class="card-body text-center">
             <h5 class="card-title">${c.name}</h5>
             <p class="card-text"># de Municipios:  ${c.municipalities}</p>
             <p class="card-text"># de Habitantes:  ${c.population}</p> 
             <p class="card-text">Superficie:  ${c.surface}</p>
             <div class="text-center">
-                <button class="btn btn-primary" onclick="redirigirADetalles('${c.id}')">Detalles</button>
+            <button class="btn btn-primary" onclick="redirigirADetalles('${c.id}')">Detalles</button>
             </div>
-        </div>`    
-        
-        container.appendChild(card)
-    })
+            </div>`    
+            
+            container.appendChild(card)
+        })
+    }
 }
 
 
@@ -55,27 +63,29 @@ fetch(region)
     categoriasGlobal = categorias;
 
     let filtros = document.getElementById("filtros");
-    let categoriasUnicas = Array.from(new Set(categorias.map(region => region.name)));
-    
-    categoriasUnicas.forEach(categoria => {
-        let check = document.createElement("div");
-        check.className = "form-check d-flex align-items-center flex-wrap gap-2";
-        check.innerHTML = `
-        <div class="d-flex gap-2 flex-wrap">
+    if (filtros) {
+        let categoriasUnicas = Array.from(new Set(categorias.map(region => region.name)));
+        
+        categoriasUnicas.forEach(categoria => {
+            let check = document.createElement("div");
+            check.className = "form-check d-flex align-items-center flex-wrap gap-2";
+            check.innerHTML = `
+            <div class="d-flex gap-2 flex-wrap">
             <input id="${categoria}" class="form-check-input" type="checkbox" value="${categoria}" onclick="filtrarPorRegion()">
             <label class="form-check-label" for="${categoria}">
             ${categoria}
             </label>
-        </div>
-        `;
-        filtros.appendChild(check);
-    });
-    fetch(departamentos)
-    .then(response => response.json())
-    .then(cards => {
-        listaDepartamentos = cards
-        mostrarDepartamentos(cards)
-    });
+            </div>
+            `;
+            filtros.appendChild(check);
+        });
+        fetch(departamentos)
+        .then(response => response.json())
+        .then(cards => {
+            listaDepartamentos = cards
+            mostrarDepartamentos(cards)
+        });
+    }
 });
 
 export function filtrarPorRegion() {
@@ -104,8 +114,20 @@ export function filtrarPorBuscador() {
     mostrarDepartamentos(filtradas);
 }
   
-  document.getElementById("filtros").addEventListener("change", () => filtrarPorBuscador())
-  document.getElementById("button").addEventListener("click", () => filtrarPorBuscador())
+function initializePage() {
+    let filtros = document.getElementById("filtros");
+    let button = document.getElementById("button");
+    
+    if (filtros) {
+        filtros.addEventListener("change", () => filtrarPorBuscador());
+    }
+
+    if (button) {
+        button.addEventListener("click", () => filtrarPorBuscador());
+    }
+}
+
+initializePage();
 
 export function redirigirADetalles(departmentId) {
     window.location.href = `./pages/detalles.html?id=${departmentId}`;
