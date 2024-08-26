@@ -45,17 +45,21 @@ function mostrarCiudades(ciudades) {
     let ciudadesLista = document.getElementById("ciudades");
     if (ciudadesLista) {  
         ciudadesLista.innerHTML = '';  
-        ciudades.forEach(ciudad => {
-            let card = document.createElement("div");
-            card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap";
-            card.innerHTML = `
-            <div class="card-body text-center">
-                <img src="../img/Colombia-1.jpg" class="image justify-content-between" >
-                <h5 class="card-title">${ciudad.name}</h5>
-            </div>`;
-            
-            ciudadesLista.appendChild(card);
-        });
+        if (ciudades.length === 0) {
+            ciudadesLista.innerHTML = "<h3 class='text-light bg-dark'>No hay coincidencias</h3>";
+        } else {
+            ciudades.forEach(ciudad => {
+                let card = document.createElement("div");
+                card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap";
+                card.innerHTML = `
+                <div class="card-body text-center">
+                    <img src="../img/Colombia-1.jpg" class="image justify-content-between" >
+                    <h5 class="card-title">${ciudad.name}</h5>
+                </div>`;
+                
+                ciudadesLista.appendChild(card);
+            });
+        }
     }
 }
 
@@ -138,6 +142,7 @@ function buscarCiudad() {
         mostrarCiudades(filtradasCiudad);  
     } else {
         mostrarCiudades(ciudadesxDepartamento);
+
     }
 }
 
