@@ -28,6 +28,7 @@ function detalles(departmentId) {
             </div>`;
             
             detalles.appendChild(card);
+
         } else {
             document.getElementById("detalles").innerHTML = "<p>Departmento no válido</p>";
         }
@@ -38,12 +39,38 @@ function detalles(departmentId) {
     })    
 }
 
+let ciudadesURL = colombia.url + '/api/v1/City'
+function ciudad(departmentId) {
+    fetch(ciudadesURL)
+    .then(response => response.json())
+    .then(ciudades => {
+        const ciudadesxDepartamento = ciudades.filter((c) => c.departmentId == departmentId)
+        ciudadesxDepartamento.forEach(ciudad => {
+            let ciudadesLista = document.getElementById("ciudades")
+            
+            let card = document.createElement("div")
+            card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap"
+            card.innerHTML = `
+            <div class="card-body text-center">
+                <h5 class="card-title">${ciudad.name}</h5>
+            </div>`
+            
+            ciudadesLista.appendChild(card)
+        })
+        .catch(error => {
+        console.error("Error fetching cities:", error);
+        document.getElementById("ciudades").innerHTML = "<p>Error cargando los datos de las ciudades.</p>";
+        });
+    })   
+}
+
 window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
     const departmentId = urlParams.get('id'); 
 
     if (departmentId) {
         detalles(departmentId);
+        ciudad(departmentId);
     } else {
         document.getElementById("detalles").innerHTML = `
         <div class='m-5 p-5 text-center bg-dark text-light rounded fw-bold d-flex flex-column justify-content-center align-items-center'>
@@ -53,3 +80,4 @@ window.onload = function() {
         `;
     }
 }
+
