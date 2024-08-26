@@ -29,7 +29,12 @@ function mostrarDepartamentos(deptos) {
     if (container) {
         
         container.innerHTML = "";   
-        
+        if (deptos.length === 0) {
+            let noResults = document.createElement("div");
+            noResults.className = "no-results text-center";
+            noResults.innerHTML = "<h3 class='text-light bg-dark'>No hay coincidencias</h3>";
+            container.appendChild(noResults);
+        } else {
         deptos.forEach(c => {
             
             let imagenes = `./img/${c.name}.jpg`
@@ -49,7 +54,7 @@ function mostrarDepartamentos(deptos) {
             </div>`    
             
             container.appendChild(card)
-        })
+        })}
     }
 }
 
