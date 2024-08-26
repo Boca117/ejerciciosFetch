@@ -18,3 +18,12 @@ body {
 main {
     flex: 1;
 }
+
+
+.table-blue {
+    background-color: #1f6f8b !important;
+}
+
+.table-green {
+    background-color: #5cb85c !important;
+}

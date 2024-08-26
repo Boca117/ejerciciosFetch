@@ -110,7 +110,7 @@ export function filtrarPorBuscador() {
             card.population.toString().includes(busqueda) || 
             card.surface.toString().includes(busqueda)
         );
-    }
+    } 
     mostrarDepartamentos(filtradas);
 }
   

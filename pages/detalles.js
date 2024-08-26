@@ -50,6 +50,7 @@ function mostrarCiudades(ciudades) {
             card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap";
             card.innerHTML = `
             <div class="card-body text-center">
+                <img src="../img/Colombia-1.jpg" class="image justify-content-between" >
                 <h5 class="card-title">${ciudad.name}</h5>
             </div>`;
             
@@ -86,10 +87,12 @@ function mostrarAreas(areas) {
             let card = document.createElement("div");
             card.className = "card col-10 col-md-5 col-lg-3 col-xl-2 d-flex flex-wrap";
             card.innerHTML = `
-            <div class="card-body text-center">
+            <div class="card-body text-center p-3">
+                <img src="../img/Collage-Colombia.jpg" class="image justify-content-between" > 
                 <h5 class="card-title">${area.name}</h5>
+                <p class="card-text">Area: ${area.landArea}</p>
             </div>`;
-            
+
             areasLista.appendChild(card);
         });
     }
@@ -98,16 +101,10 @@ function areasNaturales(departmentId) {
     fetch(areasURL)
     .then(response => response.json())
     .then(areas => {
-        let nombresAreas = new Set();
-
-         areasxDepartamento = areas.filter(a => {
-            if (a.departmentId == departmentId && !nombresAreas.has(a.name)) {
-                nombresAreas.add(a.name);  
-                return true;  
-            }
-            return false;  
-        });
+        let 
+        areasxDepartamento = areas.filter(a => a.departmentId == departmentId);
         mostrarAreas(areasxDepartamento);
+
     })
     .catch(error => {
         console.error("Error fetching areas:", error);
@@ -118,13 +115,26 @@ function areasNaturales(departmentId) {
     });
 }
 
+function filtro() {
+    let filtrar = document.getElementById("select").value;
 
+    if (filtrar == '1') {
+        mostrarCiudades(ciudadesxDepartamento);
+        document.getElementById("areas").innerHTML = '';
+    } else if (filtrar == '2') {
+        mostrarAreas(areasxDepartamento);
+        document.getElementById("ciudades").innerHTML = '';
+    } else {
+        mostrarCiudades(ciudadesxDepartamento);
+        mostrarAreas(areasxDepartamento);
+    }
+}
 
 function buscarCiudad() {
     let busquedaCiudad = document.getElementById("buscadorCiudad").value.toLowerCase();
-    
+    let filtradasCiudad = filtro()
     if (busquedaCiudad) {
-        let filtradasCiudad = ciudadesxDepartamento.filter(ciudad => ciudad.name.toLowerCase().includes(busquedaCiudad));
+        filtradasCiudad = ciudadesxDepartamento.filter(ciudad => ciudad.name.toLowerCase().includes(busquedaCiudad));
         mostrarCiudades(filtradasCiudad);  
     } else {
         mostrarCiudades(ciudadesxDepartamento);
@@ -136,9 +146,9 @@ document.getElementById("buttonCiudad").addEventListener("click", buscarCiudad);
 
 function buscarArea() {
     let busquedaArea = document.getElementById("buscadorAreas").value.toLowerCase();
-    
+    let filtradasArea = filtro()
     if (busquedaArea) {
-        let filtradasArea = areasxDepartamento.filter(area => area.name.toLowerCase().includes(busquedaArea));
+        filtradasArea = areasxDepartamento.filter(area => area.name.toLowerCase().includes(busquedaArea));
         mostrarAreas(filtradasArea);  
     } else {
         mostrarAreas(areasxDepartamento);
@@ -146,6 +156,7 @@ function buscarArea() {
 }
 
 document.getElementById("buttonAreas").addEventListener("click", buscarArea);
+document.getElementById("select").addEventListener("change", filtro);
 
 
 window.onload = function() {
